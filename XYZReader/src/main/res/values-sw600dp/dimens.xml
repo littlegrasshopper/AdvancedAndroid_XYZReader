@@ -1,7 +1,25 @@
 <resources>
-    <!-- detail -->
+
+    <dimen name="keyline_1">24dp</dimen>
+    <dimen name="keyline_2">24dp</dimen>
+
+    <!-- TODO: check this for toolbar height -->
+    <dimen name="bar_height">128dp</dimen>
+    <dimen name="side_margin">80dp</dimen>
+
+    <!-- Up Button -->
+    <dimen name="up_button_margin_top">20dp</dimen>
+
+    <!-- AppBar -->
+    <dimen name="byline_margin_left">4dp</dimen>
+    <dimen name="byline_padding_bottom">10dp</dimen>
+
+    <!-- Detail Activity -->
     <dimen name="detail_title_text_size">42sp</dimen>
     <dimen name="detail_body_text_size">20sp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.3</item>
+
+    <!-- FAB -->
     <dimen name="fab_margin">24dp</dimen>
+
 </resources>

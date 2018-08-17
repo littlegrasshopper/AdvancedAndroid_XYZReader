@@ -17,12 +17,29 @@
 
 <resources>
 
-    <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <!-- Base Application Theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    </style>
 
+    <style name="MyStyle">
+        <item name="android:textColor">#ff255f26</item>
+    </style>
+    <style name="Theme.Bacon" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_theme_primary</item>
+        <item name="colorPrimaryDark">@color/color_theme_primary_dark</item>
+        <item name="colorAccent">@color/color_theme_accent</item>
     </style>
 
     <style name="Theme.Bacon.Detail">
         <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Bacon.ToolbarExpanded" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Theme.Bacon.Detail.TextColor">
+        <item name="android:textColor">#00FF00</item>
     </style>
 
 </resources>

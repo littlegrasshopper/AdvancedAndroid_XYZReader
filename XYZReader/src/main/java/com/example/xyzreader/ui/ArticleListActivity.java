@@ -1,5 +1,8 @@
 package com.example.xyzreader.ui;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,24 +11,28 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Layout;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.TextView;
+import android.view.ViewGroup.LayoutParams;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+import com.example.xyzreader.utilities.ReaderUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,10 +45,12 @@ import java.util.GregorianCalendar;
  * touched, lead to a {@link ArticleDetailActivity} representing item details. On tablets, the
  * activity presents a grid of items as cards.
  */
-public class ArticleListActivity extends ActionBarActivity implements
+public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ArticleListActivity.class.toString();
+    private static final int MAX_WIDTH_CARD = 150;
+
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -55,7 +64,7 @@ public class ArticleListActivity extends ActionBarActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article_list);
+        setContentView(R.layout.fwc_activity_article_list);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -71,6 +80,7 @@ public class ArticleListActivity extends ActionBarActivity implements
             refresh();
         }
     }
+
 
     private void refresh() {
         startService(new Intent(this, UpdaterService.class));
@@ -114,10 +124,27 @@ public class ArticleListActivity extends ActionBarActivity implements
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         Adapter adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
+        mRecyclerView.setHasFixedSize(true);
+
         mRecyclerView.setAdapter(adapter);
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        Float dp = ReaderUtils.convertPixelsToDp(ReaderUtils.getScreenResolution(this), this);
+        int maxWidth = (int)getResources().getInteger(R.integer.main_cardview_width);
+        int columnCount = (int)(dp / /*MAX_WIDTH_CARD*/ maxWidth);
+        //int columnCount = (int)getResources().getInteger(R.integer.grid_span);
+
+        //int columnCount = getResources().getInteger(R.integer.list_column_count);
+        GridLayoutManager sglm =
+                new GridLayoutManager(this, columnCount > 0 ? columnCount : 1,
+                        GridLayoutManager.VERTICAL,
+                        false);
+        // Credit:
+        // https://gist.github.com/nesquena/db922669798eba3e3661
+        // === START ===
+        //SpacesItemDecoration decoration = new SpacesItemDecoration(getResources().getInteger(R.integer.grid_spacing));
+        //mRecyclerView.addItemDecoration(decoration);
+        // === END ===
+
+
         mRecyclerView.setLayoutManager(sglm);
     }
 
@@ -125,6 +152,7 @@ public class ArticleListActivity extends ActionBarActivity implements
     public void onLoaderReset(Loader<Cursor> loader) {
         mRecyclerView.setAdapter(null);
     }
+
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private Cursor mCursor;
@@ -139,15 +167,33 @@ public class ArticleListActivity extends ActionBarActivity implements
             return mCursor.getLong(ArticleLoader.Query._ID);
         }
 
+        //TODO: Lesson 5.9 Adaptive Design
+        // Switch layouts based on boolean (single list vs grid)
+        /*
+        public View newView(...) {
+        return getLayoutInflater().inflate(
+            res.getBoolean(R.bool.multi_column)
+            ? R.layout.item_tile
+            : R.layout.item_card,
+            parent, false);
+            }
+         */
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
             final ViewHolder vh = new ViewHolder(view);
+            final Activity context = getParent();
+            // Credit: https://stackoverflow.com/questions/48473811/how-to-set-explode-transition-with-xml-file
+            // Udacity: 4.7 Activity Enter and Exit
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Bundle bundle = ActivityOptions
+                            .makeSceneTransitionAnimation(ArticleListActivity.this)
+                            .toBundle();
                     startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))),
+                            bundle);
                 }
             });
             return vh;
@@ -172,16 +218,16 @@ public class ArticleListActivity extends ActionBarActivity implements
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
 
                 holder.subtitleView.setText(Html.fromHtml(
-                        DateUtils.getRelativeTimeSpanString(
+                        /*DateUtils.getRelativeTimeSpanString(
                                 publishedDate.getTime(),
                                 System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                                 DateUtils.FORMAT_ABBREV_ALL).toString()
-                                + "<br/>" + " by "
+                                + "<br/>" +*/ " by "
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             } else {
                 holder.subtitleView.setText(Html.fromHtml(
-                        outputFormat.format(publishedDate)
-                        + "<br/>" + " by "
+                       /* outputFormat.format(publishedDate)
+                        + "<br/>" + */" by "
                         + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             }
             holder.thumbnailView.setImageUrl(

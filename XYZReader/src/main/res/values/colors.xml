@@ -22,4 +22,31 @@
     <color name="theme_primary_dark">#04561A</color>
     <color name="theme_accent">#04561A</color>
     <color name="ltgray">#ffe0e0e0</color>
+
+    <!--fwc -->
+    <!--color name="color_theme_primary">#4a148c</color-->
+    <color name="color_theme_primary">#424242</color>
+
+    <color name="color_theme_primary_dark">#1b1b1b</color>
+    <!--color name="color_theme_primary_dark">#12005e</color-->
+    <color name="color_theme_primary_light">#6d6d6d</color>
+
+    <!--color name="color_theme_primary_light">#7c43bd</color-->
+    <!--
+    <color name="color_theme_primary">#757575</color>
+    <color name="color_theme_primary_dark">#424242</color>
+    <color name="color_theme_primary_light">#bdbdbd</color>
+    -->
+    <color name="color_theme_secondary">#4527a0</color>
+    <!--color name="color_theme_accent">#ff6e40</color-->
+    <!--color name="color_theme_accent">#8bc34a</color-->
+    <!--color name="color_theme_accent">#4a148c</color-->
+    <color name="color_theme_accent">#c53d13</color>
+    c53d13
+
+    <color name="color_book_title">#fff</color>
+    <color name="color_book_author">#fff</color>
+    <color name="color_publish_date">#cacaca</color>
+    <color name="color_book_body">#263238</color>
+    <color name="list_background">#f5f5f5</color>
 </resources>
