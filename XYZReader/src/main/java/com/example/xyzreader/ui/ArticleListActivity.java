@@ -1,6 +1,5 @@
 package com.example.xyzreader.ui;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.support.v4.app.LoaderManager;
@@ -9,26 +8,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.content.Loader;
 import android.database.Cursor;
-import android.graphics.Movie;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.Layout;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.TextView;
-import android.view.ViewGroup.LayoutParams;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -38,13 +29,12 @@ import com.example.xyzreader.utilities.ReaderUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
- * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
+ * handset and tablet-size devices. On handsets, the activity presents a list of items as cards, which when
  * touched, lead to a {@link ArticleDetailActivity} representing item details. On tablets, the
  * activity presents a grid of items as cards.
  */
@@ -52,7 +42,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ArticleListActivity.class.toString();
-    private static final int MAX_WIDTH_CARD = 150;
 
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -67,23 +56,19 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fwc_activity_article_list);
+        setContentView(R.layout.activity_article_list);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
 
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
 
-        final View toolbarContainerView = findViewById(R.id.toolbar_container);
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.recycler_view);
         getSupportLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
             refresh();
         }
     }
-
 
     private void refresh() {
         startService(new Intent(this, UpdaterService.class));
@@ -109,14 +94,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                 mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
-                Log.i(TAG, "mIsRefreshing is: " + mIsRefreshing);
                 updateRefreshingUI();
             }
         }
     };
 
     private void updateRefreshingUI() {
-        Log.i(TAG, "updating Refresh UI: " + mIsRefreshing);
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
     }
 
@@ -127,40 +110,31 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        Log.i(TAG, "onLoadFinished " + mIsRefreshing);
 
         runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    Log.i(TAG, "onLoadFinished setting refresh to false");
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
 
-                }
-            });
+            }
+        });
 
         Adapter adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
         mRecyclerView.setHasFixedSize(true);
-
         mRecyclerView.setAdapter(adapter);
+        // Determine grid span based on screen resolution
+        // For credit, see BakingApp.
         Float dp = ReaderUtils.convertPixelsToDp(ReaderUtils.getScreenResolution(this), this);
         int maxWidth = (int)getResources().getInteger(R.integer.main_cardview_width);
-        int columnCount = (int)(dp / /*MAX_WIDTH_CARD*/ maxWidth);
-        //int columnCount = (int)getResources().getInteger(R.integer.grid_span);
+        int columnCount = (int)(dp / maxWidth);
 
-        //int columnCount = getResources().getInteger(R.integer.list_column_count);
-        GridLayoutManager sglm =
+        GridLayoutManager glm =
                 new GridLayoutManager(this, columnCount > 0 ? columnCount : 1,
                         GridLayoutManager.VERTICAL,
                         false);
-        // Credit:
-        // https://gist.github.com/nesquena/db922669798eba3e3661
-        // === START ===
-        //SpacesItemDecoration decoration = new SpacesItemDecoration(getResources().getInteger(R.integer.grid_spacing));
-        //mRecyclerView.addItemDecoration(decoration);
-        // === END ===
 
-        mRecyclerView.setLayoutManager(sglm);
+        mRecyclerView.setLayoutManager(glm);
     }
 
     @Override
@@ -222,16 +196,11 @@ public class ArticleListActivity extends AppCompatActivity implements
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
 
                 holder.subtitleView.setText(Html.fromHtml(
-                        /*DateUtils.getRelativeTimeSpanString(
-                                publishedDate.getTime(),
-                                System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                                DateUtils.FORMAT_ABBREV_ALL).toString()
-                                + "<br/>" +*/ " by "
+                         "By "
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             } else {
                 holder.subtitleView.setText(Html.fromHtml(
-                       /* outputFormat.format(publishedDate)
-                        + "<br/>" + */" by "
+                       "By "
                         + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             }
             holder.thumbnailView.setImageUrl(

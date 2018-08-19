@@ -10,24 +10,25 @@
 
     <FrameLayout
         android:id="@+id/up_container"
-        android:background="@android:color/transparent"
         android:layout_width="match_parent"
-        android:fitsSystemWindows="true"
-        android:layout_height="?actionBarSize">
+        android:layout_height="?actionBarSize"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true">
 
         <ImageButton
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:id="@+id/action_up"
-            android:fitsSystemWindows="true"
             android:layout_width="?actionBarSize"
             android:layout_height="?actionBarSize"
             android:layout_gravity="center_vertical"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/up"
-            android:src="@drawable/ic_arrow_back" />
+            android:fitsSystemWindows="true"
+            android:src="@drawable/ic_arrow_back"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     </FrameLayout>
 </FrameLayout>
-<!-- Credit
+
+    <!-- Credit
     https://stackoverflow.com/questions/43202381/android-toolbar-under-status-bar-in-coordinatorlayout-in-fragment
--->
+    -->

@@ -10,4 +10,5 @@
     <string name="up">Up</string>
     <string name="book_image">Book Image</string>
     <string name="default_book_info">N/A</string>
+    <string name="sample_text">Some sample text</string>
 </resources>

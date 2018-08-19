@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/draw_insets_frame_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/detail_appbar_height"
+        android:elevation="@dimen/main_appbar_elevation"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -57,27 +57,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:fitsSystemWindows="false"
-                android:minHeight="112dp"
-                app:contentInsetStart="72dp"
+                app:contentInsetStart="@dimen/detail_toolbar_inset"
                 app:layout_collapseMode="pin" />
-            <!--
-                <com.example.xyzreader.ui.MaxWidthLinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/detail_card_top_margin"
-                    android:background="@color/color_theme_secondary"
-                    android:elevation="2dp"
-                    android:maxWidth="@dimen/detail_card_max_width"
-                    android:orientation="vertical"
-                    android:padding="@dimen/detail_metabar_vert_padding"-->
 
             <LinearLayout
                 android:id="@+id/meta_bar"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_gravity="bottom"
-                android:elevation="4dp"
+                android:elevation="@dimen/main_appbar_elevation"
                 android:fitsSystemWindows="true"
                 android:maxWidth="@dimen/detail_card_max_width"
                 android:orientation="vertical"
@@ -103,12 +91,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="10dp"
-                    android:textColor="#8fff" />
-
+                    android:textColor="@color/color_article_byline" />
 
             </LinearLayout>
-            <!--/com.example.xyzreader.ui.MaxWidthLinearLayout-->
-            <!--/android.support.v7.widget.Toolbar-->
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -116,35 +101,21 @@
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <TextView
-                android:id="@+id/article_body"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
-                android:layout_marginRight="@dimen/detail_inner_horiz_margin"
-                android:layout_marginTop="@dimen/body_margin_top"
-                android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
-                android:text="hello i am the default text"
-                android:textColor="@color/color_book_body"
-                android:textColorLink="@color/color_theme_accent"
-                android:textSize="@dimen/detail_body_text_size" />
+        <TextView
+            android:id="@+id/article_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
+            android:layout_marginRight="@dimen/detail_inner_horiz_margin"
+            android:layout_marginTop="@dimen/body_margin_top"
+            android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
+            android:textColor="@color/color_book_body"
+            android:textColorLink="@color/color_theme_accent"
+            android:textSize="@dimen/detail_body_text_size" />
 
     </android.support.v4.widget.NestedScrollView>
-
-    <!--ImageButton android:id="@+id/share_fab"
-        android:stateListAnimator="@anim/fab_state_list_anim"
-        android:background="@drawable/add_fab_background"
-        android:layout_gravity="bottom|start"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:src="@drawable/ic_share"
-        android:elevation="@dimen/fab_elevation"
-        android:contentDescription="@string/action_share" /-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
@@ -164,8 +135,9 @@
         app:fabSize="normal"
         app:pressedTranslationZ="12dp" />
 
+</android.support.design.widget.CoordinatorLayout>
 
-</android.support.design.widget.CoordinatorLayout><!-- Credits:
+    <!-- Credits:
 https://github.com/codepath/android_guides/wiki/Handling-Scrolls-with-CoordinatorLayout
 https://guides.codepath.com/android/using-the-app-toolbar
 https://github.com/chrisbanes/cheesesquare/blob/master/app/src/main/res/layout/activity_detail.xml

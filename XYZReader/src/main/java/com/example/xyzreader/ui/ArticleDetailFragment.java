@@ -5,11 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 
@@ -22,8 +19,6 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.widget.ScrollView;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -34,9 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -45,15 +38,12 @@ import com.example.xyzreader.data.ArticleLoader;
 
 /**
  * A fragment representing a single Article detail screen. This fragment is
- * either contained in a {@link ArticleListActivity} in two-pane mode (on
- * tablets) or a {@link ArticleDetailActivity} on handsets.
+ * either contained in {@link ArticleDetailActivity} on handsets/tablets.
  */
 public class ArticleDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "ArticleDetailFragment";
-
     public static final String ARG_ITEM_ID = "item_id";
-    private static final float PARALLAX_FACTOR = 1.25f;
 
     private Cursor mCursor;
     private long mItemId;
@@ -69,6 +59,7 @@ public class ArticleDetailFragment extends Fragment implements
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
+    private Typeface mRosario;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -100,14 +91,7 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
-        //mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
-                //R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
-
-    }
-
-    public ArticleDetailActivity getActivityCast() {
-        return (ArticleDetailActivity) getActivity();
     }
 
     @Override
@@ -125,119 +109,36 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        /* REMOVED
-        mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
-                mRootView.findViewById(R.id.draw_insets_frame_layout);
-        mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
-            @Override
-            public void onInsetsChanged(Rect insets) {
-                mTopInset = insets.top;
-            }
-        });
-        */
 
-        /* Doesn't work - arrow disappears behind toolbar
-        final Toolbar toolbar = mRootView.findViewById(R.id.toolbar);
-        getActivityCast().setSupportActionBar(toolbar);
-        getActivityCast().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        */
+        mScrollView = mRootView.findViewById(R.id.scrollview);
 
-        /* Doesn't work either
-        Toolbar toolbar = mRootView.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-        */
-        mScrollView = (NestedScrollView) mRootView.findViewById(R.id.scrollview);
-
-        /**
-        mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
-            @Override
-            public void onScrollChanged() {
-                mScrollY = mScrollView.getScrollY();
-                getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
-                mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
-                updateStatusBar();
-            }
-        });
-         **/
-
-        //Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-// Remove default title text
-        //Credit
-        // https://stackoverflow.com/questions/38189198/how-to-use-setsupportactionbar-in-fragment
-        //((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-// Get access to the custom title view
-        //TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         collapsingToolbarLayout = mRootView.findViewById(R.id.collapsing_toolbar_layout);
 
-        mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
-        //mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
-        //mStatusBarColorDrawable = new ColorDrawable(0);
+        mPhotoView = mRootView.findViewById(R.id.photo);
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
                         .setType("text/plain")
-                        .setText("Some sample text")
+                        .setText(getResources().getString(R.string.sample_text))
                         .getIntent(), getString(R.string.action_share)));
             }
         });
 
-        //TODO 3.18 Fwc instantiate the font here
-        //xxView.setTypeface(courgette);
-
-        //bindViews();
-        //updateStatusBar();
         return mRootView;
     }
 
-    //TODO 3.18 fwc to install a font
-    /*
+    /**
+     * Install the Rosario-Regular font
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        courgette = Typeface.createFromAsset(getActivity().getAssets(), "Courgette-Regular.ttf");
-    }
-    */
-
-/*
-    private void updateStatusBar() {
-        int color = 0;
-        if (mPhotoView != null && mTopInset != 0 && mScrollY > 0) {
-            float f = progress(mScrollY,
-                    mStatusBarFullOpacityBottom - mTopInset * 3,
-                    mStatusBarFullOpacityBottom - mTopInset);
-            color = Color.argb((int) (255 * f),
-                    (int) (Color.red(mMutedColor) * 0.9),
-                    (int) (Color.green(mMutedColor) * 0.9),
-                    (int) (Color.blue(mMutedColor) * 0.9));
-        }
-        Log.i(TAG, "color is: " + color);
-        mStatusBarColorDrawable.setColor(color);
-        //mDrawInsetsFrameLayout.setInsetBackground(mStatusBarColorDrawable);
+        mRosario = Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf");
     }
 
-    static float progress(float v, float min, float max) {
-        return constrain((v - min) / (max - min), 0, 1);
-    }
-
-    static float constrain(float val, float min, float max) {
-        if (val < min) {
-            return min;
-        } else if (val > max) {
-            return max;
-        } else {
-            return val;
-        }
-    }
-*/
     private Date parsePublishedDate() {
         try {
             String date = mCursor.getString(ArticleLoader.Query.PUBLISHED_DATE);
@@ -250,7 +151,6 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
     // Credit: https://stackoverflow.com/questions/2116162/how-to-display-html-in-textview
-
     private void bindViews() {
         if (mRootView == null) {
             return;
@@ -261,8 +161,7 @@ public class ArticleDetailFragment extends Fragment implements
         bylineView.setMovementMethod(new LinkMovementMethod());
         TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
 
-
-        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+        bodyView.setTypeface(mRosario);
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
@@ -289,35 +188,18 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            //Log.i("***fragment", mCursor.getString(ArticleLoader.Query.BODY));
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-
-                Log.i("*** first", "first");
-                if (bodyView.getVisibility() == View.VISIBLE) {
-                    Log.i(TAG, "bodyView is VISIBLE");
-                } else {
-                    Log.i(TAG, "bodyView is INVISIBLE");
-                }
-                bodyView.setText("HELLO");
-
-                //bodyView.setBackgroundColor(Color.CYAN);
-                //bodyView.animate().alpha(1);
-
-
+                // Modified to return first 50K characters and break by paragraphs
                 bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
                         .substring(0, 50000)
                         .replaceAll("(\r\n|\n){2}", "<br /><br />")
                         ,Html.FROM_HTML_MODE_LEGACY));
-
-
             } else {
-                Log.i("***second", "second");
-                bodyView.setText("Hello I am in second");
-
-                /*
                 bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
-                        .replaceAll("(\r\n|\n){2}", "<br /><br />")));*/
+                        .replaceAll("(\r\n|\n){2}", "<br /><br />")));
             }
+
+            // Set collapsing toolbar title
             collapsingToolbarLayout.setTitle(title);
 
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
@@ -326,18 +208,17 @@ public class ArticleDetailFragment extends Fragment implements
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
-                                Palette p = Palette.generate(bitmap, 12);
+                                Palette p = Palette.from(bitmap).generate();
                                 mVibrantColor = p.getDarkVibrantColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
                                 mRootView.findViewById(R.id.meta_bar)
                                         .setBackgroundColor(mVibrantColor);
-                                //updateStatusBar();
                             }
                         }
 
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-
+                            Log.d(TAG, volleyError.getLocalizedMessage());
                         }
                     });
 
@@ -353,7 +234,6 @@ public class ArticleDetailFragment extends Fragment implements
     public android.support.v4.content.Loader<Cursor>  onCreateLoader(int i, Bundle bundle) {
         return ArticleLoader.newInstanceForItemId(getActivity(), mItemId);
     }
-
 
     @Override
     public void onLoadFinished(@NonNull android.support.v4.content.Loader<Cursor> loader, Cursor cursor) {
@@ -379,17 +259,4 @@ public class ArticleDetailFragment extends Fragment implements
         mCursor = null;
         bindViews();
     }
-
-    /*
-    public int getUpButtonFloor() {
-        if (mPhotoContainerView == null || mPhotoView.getHeight() == 0) {
-            return Integer.MAX_VALUE;
-        }
-
-        // account for parallax
-        return mIsCard
-                ? (int) mPhotoContainerView.getTranslationY() + mPhotoView.getHeight() - mScrollY
-                : mPhotoView.getHeight() - mScrollY;
-    }
-    */
 }

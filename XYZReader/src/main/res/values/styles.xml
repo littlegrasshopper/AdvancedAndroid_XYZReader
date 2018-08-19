@@ -30,18 +30,11 @@
         <item name="colorAccent">@color/color_theme_accent</item>
     </style>
 
-    <!-- Credit: https://stackoverflow.com/questions/29311078/android-completely-transparent-status-bar -->
-    <!-- https://stackoverflow.com/questions/29907615/android-transparent-status-bar-and-actionbar -->
-
-
     <style name="Theme.XYZReader.Detail.ToolbarExpanded" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
         <item name="android:textSize">24sp</item>
     </style>
     <style name="Theme.XYZReader.Detail.ToolbarCollapsed" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
         <item name="android:textSize">20sp</item>
-    </style>
-    <style name="Theme.XYZReader.Detail.TextColor">
-        <item name="android:textColor">#00FF00</item>
     </style>
 
 </resources>

@@ -12,6 +12,8 @@
     <dimen name="main_card_margin_top">0dp</dimen>
     <dimen name="keyline_1">16dp</dimen>
     <dimen name="keyline_2">72dp</dimen>
+    <dimen name="expanded_toolbar_margin">32dp</dimen>
+    <dimen name="list_bottom_padding">32dp</dimen>
 
     <!-- TODO: check this for toolbar height -->
     <dimen name="bar_height">56dp</dimen>
@@ -27,6 +29,7 @@
     <!-- Toolbar -->
     <dimen name="detail_toolbar_height">?actionBarSize</dimen>
     <dimen name="detail_title_text_size">32sp</dimen>
+    <dimen name="detail_toolbar_inset">72dp</dimen>
 
     <dimen name="byline_margin_left">16dp</dimen>
     <dimen name="byline_padding_bottom">0dp</dimen>
