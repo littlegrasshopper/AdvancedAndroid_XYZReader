@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Credit: Udacity Lesson 4.7 Activity Enter and Exit -->
 <resources>
-    <style name="AppTheme.Home">
+    <style name="Theme.XYZReader.Detail">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowExitTransition">@transition/grid_exit</item>
         <item name="android:windowReenterTransition">@android:transition/slide_top</item>
     </style>
+    <!-- Credit
+    https://stackoverflow.com/questions/29069070/completely-transparent-status-bar-and-navigation-bar-on-lollipop
+    -->
+    <style name="Theme.XYZReader.Detail.RemoveThis" >
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+    </style>
+
+    <!-- Stuff taken out:
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+
+    -->
+    <!-- Credit: https://stackoverflow.com/questions/22192291/how-to-change-the-status-bar-color-in-android -->
+        <!-- Base application theme. -->
+    <!--
+        <style name="AppTheme" parent="Theme.AppCompat.Light">
+            <item name="colorPrimary">@color/color_theme_primary</item>
+            <item name="colorPrimaryDark">@color/color_theme_secondary</item>
+            <item name="colorAccent">@color/color_theme_accent</item>
+            <item name="android:statusBarColor">@android:color/transparent</item>
+        </style>
+        -->
 </resources>

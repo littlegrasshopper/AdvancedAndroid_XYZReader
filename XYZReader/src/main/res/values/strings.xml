@@ -8,6 +8,6 @@
     <string name="action_share">Share</string>
 
     <string name="up">Up</string>
-    <string name="article_image">Article Image</string>
+    <string name="book_image">Book Image</string>
     <string name="default_book_info">N/A</string>
 </resources>

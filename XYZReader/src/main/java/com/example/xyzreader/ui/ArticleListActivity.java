@@ -3,13 +3,15 @@ package com.example.xyzreader.ui;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
+import android.graphics.Movie;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -36,6 +38,7 @@ import com.example.xyzreader.utilities.ReaderUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -74,7 +77,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        getLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(0, null, this);
 
         if (savedInstanceState == null) {
             refresh();
@@ -106,12 +109,14 @@ public class ArticleListActivity extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                 mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
+                Log.i(TAG, "mIsRefreshing is: " + mIsRefreshing);
                 updateRefreshingUI();
             }
         }
     };
 
     private void updateRefreshingUI() {
+        Log.i(TAG, "updating Refresh UI: " + mIsRefreshing);
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
     }
 
@@ -122,6 +127,17 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        Log.i(TAG, "onLoadFinished " + mIsRefreshing);
+
+        runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    Log.i(TAG, "onLoadFinished setting refresh to false");
+
+                }
+            });
+
         Adapter adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
         mRecyclerView.setHasFixedSize(true);
@@ -143,7 +159,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         //SpacesItemDecoration decoration = new SpacesItemDecoration(getResources().getInteger(R.integer.grid_spacing));
         //mRecyclerView.addItemDecoration(decoration);
         // === END ===
-
 
         mRecyclerView.setLayoutManager(sglm);
     }
@@ -167,17 +182,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             return mCursor.getLong(ArticleLoader.Query._ID);
         }
 
-        //TODO: Lesson 5.9 Adaptive Design
-        // Switch layouts based on boolean (single list vs grid)
-        /*
-        public View newView(...) {
-        return getLayoutInflater().inflate(
-            res.getBoolean(R.bool.multi_column)
-            ? R.layout.item_tile
-            : R.layout.item_card,
-            parent, false);
-            }
-         */
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);

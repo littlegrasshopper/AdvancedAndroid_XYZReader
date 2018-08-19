@@ -24,21 +24,23 @@
     <style name="MyStyle">
         <item name="android:textColor">#ff255f26</item>
     </style>
-    <style name="Theme.Bacon" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.XYZReader" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/color_theme_primary</item>
         <item name="colorPrimaryDark">@color/color_theme_primary_dark</item>
         <item name="colorAccent">@color/color_theme_accent</item>
     </style>
 
-    <style name="Theme.Bacon.Detail">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
+    <!-- Credit: https://stackoverflow.com/questions/29311078/android-completely-transparent-status-bar -->
+    <!-- https://stackoverflow.com/questions/29907615/android-transparent-status-bar-and-actionbar -->
 
-    <style name="Theme.Bacon.ToolbarExpanded" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+
+    <style name="Theme.XYZReader.Detail.ToolbarExpanded" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
         <item name="android:textSize">24sp</item>
     </style>
-
-    <style name="Theme.Bacon.Detail.TextColor">
+    <style name="Theme.XYZReader.Detail.ToolbarCollapsed" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="Theme.XYZReader.Detail.TextColor">
         <item name="android:textColor">#00FF00</item>
     </style>
 

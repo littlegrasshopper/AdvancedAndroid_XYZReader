@@ -9,9 +9,9 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_appbar_height"
-        android:background="?colorPrimaryDark"
         android:fitsSystemWindows="true"
-        app:theme="@style/Theme.Bacon">
+        android:elevation="@dimen/main_appbar_elevation"
+        android:theme="@style/Theme.XYZReader">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
@@ -32,15 +32,15 @@
                 android:elevation="8dp">
             -->
 
+            <!--                android:layout_marginLeft="@dimen/list_toolbar_side_margin"
+                android:layout_marginRight="@dimen/list_toolbar_side_margin"
+                -->
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:layout_gravity="bottom"
-                android:layout_marginLeft="@dimen/list_toolbar_side_margin"
-                android:layout_marginRight="@dimen/list_toolbar_side_margin"
                 android:fitsSystemWindows="true"
-                app:contentInsetStart="@dimen/keyline_2"
                 app:layout_collapseMode="pin">
 
                 <ImageView
@@ -64,7 +64,7 @@
         android:id="@+id/books_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/dark_list_item_background_rect"
+        android:background="#e0e0e0"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -77,10 +77,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingBottom="28dp"
+                android:paddingBottom="32dp"
                 android:paddingLeft="@dimen/list_side_margin"
                 android:paddingRight="@dimen/list_side_margin"
-                android:paddingTop="45dp"
+
                 android:scrollbarStyle="outsideOverlay" />
 
         </android.support.v4.widget.SwipeRefreshLayout>

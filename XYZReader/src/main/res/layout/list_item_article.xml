@@ -6,12 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:background="@color/color_theme_primary_dark"
     android:clickable="true"
     android:focusable="true"
-    card_view:cardCornerRadius="5dp"
-    card_view:cardMaxElevation="4dp"
-    card_view:cardElevation="4dp"
+    card_view:cardCornerRadius="@dimen/main_card_radius"
+    card_view:cardMaxElevation="@dimen/main_card_elevation"
+    card_view:cardElevation="@dimen/main_card_elevation"
     card_view:cardUseCompatPadding="true"
     android:foreground="?selectableItemBackground">
     <!-- Credit: https://stackoverflow.com/questions/43299956/how-do-i-decrease-the-space-between-cards-in-a-cardview-within-a-recyclerview -->
@@ -28,6 +27,7 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:background="@color/photo_placeholder"
+            android:contentDescription="@string/book_image"
             android:scaleType="centerCrop" />
 
         <View
